@@ -16,19 +16,26 @@ void double_swap(t_elem *first_stack, t_elem *second_stack) {
 }
 
 void push(t_elem **from, t_elem **to) {
-    t_elem *new_elem;
-    new_elem = ft_memalloc(sizeof(t_elem));
-    new_elem->number = (*from)->number;
-
+    t_elem *elem;
+    elem = (*from);
     *from = (*from)->prev;
+
     if (*from) {
-        free((*from)->next);
+        (*from)->next = NULL;
     }
+    elem->prev = (*to);
 
     if (*to) {
-        new_elem->prev = *to;
-        *to = (*to)->next;
+        (*to)->next = elem;
     }
-    *to = new_elem;
+    *to = elem;
 }
+
+void rotate(t_elem **stack_top, t_elem **stack_bottom, int reverse) {
+    t_elem *prev;
+    prev = (*stack_top)->prev;
+    (*stack_top)->prev = NULL;
+}
+
+
 
