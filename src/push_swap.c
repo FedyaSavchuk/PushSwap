@@ -25,18 +25,23 @@ int     main(int argc, char **argv) {
     stack_b = ft_memalloc(sizeof(t_elem));
     test_swap(&stack_a, &stack_b);
 
+    t_elem *stack_top;
+    t_elem *stack_bottom;
+
     checker(argc, argv, stack_a, stack_b);
-    while (stack_a->next) {
-        stack_a = stack_a->next;
+
+    stack_bottom = stack_a;
+    stack_top = stack_a;
+
+    while (stack_top->next) {
+        stack_top = stack_top->next;
     }
     stack_b = NULL;
-    push(&stack_a, &stack_b);
-    print_stacks(stack_a);
-    print_stacks(stack_b);
-    push(&stack_b, &stack_a);
-    print_stacks(stack_a);
-    print_stacks(stack_b);
-    rotate(&stack_a, &stack_a, 0);
+
+
+    //rotate(&stack_top, &stack_bottom, 1);
+    //rotate(&stack_top, &stack_bottom, 1);
+    print_stacks(stack_top);
 
     return 0;
 }

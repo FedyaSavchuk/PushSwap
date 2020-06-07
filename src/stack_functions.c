@@ -32,9 +32,32 @@ void push(t_elem **from, t_elem **to) {
 }
 
 void rotate(t_elem **stack_top, t_elem **stack_bottom, int reverse) {
-    t_elem *prev;
-    prev = (*stack_top)->prev;
-    (*stack_top)->prev = NULL;
+    t_elem *elem;
+    if (reverse) {
+        elem = (*stack_bottom)->next;
+        elem->prev = NULL;
+        (*stack_top)->next = *stack_bottom;
+        (*stack_bottom)->prev = *stack_top;
+        (*stack_bottom)->next = NULL;
+
+        *stack_top = *stack_bottom;
+        *stack_bottom = elem;
+    }
+    else {
+        elem = (*stack_top)->prev;
+        (*stack_top)->next = *stack_bottom;
+        (*stack_top)->prev = NULL;
+        (*stack_bottom)->prev = *stack_top;
+        elem->next = NULL;
+
+        *stack_bottom = *stack_top;
+        *stack_top = elem;
+    }
+}
+
+void double_rotate(t_elem **first_stack_top, t_elem **first_stack_bottom, t_elem **second_stack_top, t_elem **second_stack_bottom, int reverse) {
+    rotate(first_stack_top, first_stack_bottom, reverse);
+    rotate(second_stack_top, second_stack_bottom, reverse);
 }
 
 
