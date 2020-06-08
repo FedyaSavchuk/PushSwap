@@ -4,19 +4,6 @@
 
 #include "push_swap.h"
 
-int ft_is_number(char *str) {
-    int i = 0;
-
-    while (str[i]) {
-        if (str[i] <= '0' || str[i] > '9') {
-            return 0;
-        }
-        i++;
-    }
-
-    return 1;
-}
-
 void add_number(t_elem *stack_a, int number) {
     t_elem *prev_elem;
 
