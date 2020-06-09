@@ -129,11 +129,9 @@ void sort_stack(t_elem **first_stack_top, t_elem **first_stack_bottom, t_elem **
     while (!is_sort(*first_stack_top)) {
         counter++;
         if ((*first_stack_top)->number > (*first_stack_bottom)->number) {
-            counter++;
             rotate(first_stack_top, first_stack_bottom, 0);
         }
         else {
-            counter++;
             rotate(first_stack_top, first_stack_bottom, 1);
         }
 
