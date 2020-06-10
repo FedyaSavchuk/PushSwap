@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack_functions.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fedyasavchuk <fedyasavchuk@student.42.fr>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/10 17:11:08 by fedyasavchuk      #+#    #+#             */
+/*   Updated: 2020/06/10 17:11:08 by fedyasavchuk     ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "push_swap.h"
 
@@ -23,14 +34,10 @@ void	push(t_elem **from, t_elem **to)
 	elem = (*from);
 	*from = (*from)->prev;
 	if (*from)
-	{
 		(*from)->next = NULL;
-	}
 	elem->prev = (*to);
 	if (*to)
-	{
 		(*to)->next = elem;
-	}
 	*to = elem;
 }
 
@@ -60,8 +67,8 @@ void	rotate(t_elem **stack_top, t_elem **stack_bottom, int reverse)
 	}
 }
 
-void	double_rotate(t_elem **first_stack_top, t_elem **first_stack_bottom, t_elem **second_stack_top, t_elem **second_stack_bottom, int reverse)
+void	double_rotate(t_elem **stack_a[], t_elem **stack_b[], int reverse)
 {
-	rotate(first_stack_top, first_stack_bottom, reverse);
-	rotate(second_stack_top, second_stack_bottom, reverse);
+	rotate(stack_a[0], stack_a[1], reverse);
+	rotate(stack_b[0], stack_b[1], reverse);
 }

@@ -1,74 +1,89 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   median_sort.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fedyasavchuk <fedyasavchuk@student.42.fr>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/10 17:10:31 by fedyasavchuk      #+#    #+#             */
+/*   Updated: 2020/06/10 17:10:31 by fedyasavchuk     ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "push_swap.h"
 
+int		search_min(t_elem **stack)
+{
+	int min;
+
+	min = (*stack)->number;
+	while (*stack)
+	{
+		min = get_smaller(min, (*stack)->number);
+		(*stack) = (*stack)->prev;
+	}
+	return (min);
+}
+
 int		search_median(t_elem *stack)
 {
-	int size = stack_size(stack);
-	t_elem *start = stack;
+	int		size;
+	int		min;
+	int		i;
+	int		smaller;
+	t_elem	*start;
 
-	int min = stack->number;
-	while (stack) {
-		min = get_smaller(min, stack->number);
-		stack = stack->prev;
-	}
-
-	int i = 0;
- 	while (i < size / 2)
- 	{
+	start = stack;
+	size = stack_size(stack);
+	min = search_min(&stack);
+	i = -1;
+	while (++i < size / 2)
+	{
 		stack = start;
 		while (stack->number <= min)
 			stack = stack->prev;
-		int smaller = stack->number;
-		while (stack) {
-			if (stack->number <= min)
-            {
-            	stack = stack->prev;
-				continue;
-			}
-			smaller = get_smaller(smaller, stack->number);
+		smaller = stack->number;
+		while (stack)
+		{
+			if (stack->number >= min)
+				smaller = get_smaller(smaller, stack->number);
 			stack = stack->prev;
 		}
 		min = smaller;
-		i++;
 	}
-    return min;
+	return (min);
 }
 
-void	sort(t_elem **first_stack_top, t_elem **first_stack_bottom, t_elem **second_stack_top, int median)
+void	sort(t_elem **a_top, t_elem **a_bottom, t_elem **b_top, int median)
 {
 	int size;
 	int i;
 
 	i = 0;
-	size = stack_size(*first_stack_top);
-    while (i < size && stack_size(*first_stack_top) > 2)
-    {
-        if ((*first_stack_top)->number <= median)
-			push(first_stack_top, second_stack_top);
+	size = stack_size(*a_top);
+	while (i < size && stack_size(*a_top) > 2)
+	{
+		if ((*a_top)->number > median)
+			rotate(a_top, a_bottom, 0);
 		else
-			rotate(first_stack_top, first_stack_bottom, 0);
+			push(a_top, b_top);
 		i++;
 	}
 }
 
-void	median_sort(t_elem **first_stack_top, t_elem **first_stack_bottom, t_elem **second_stack_top, t_elem **second_stack_bottom)
+void	median_sort(t_elem **a_top, t_elem **a_bottom,
+					t_elem **b_top, t_elem **b_bottom)
 {
-	while (stack_size(*first_stack_top) > 2)
+	int median;
+
+	while (stack_size(*a_top) > 2)
 	{
-		int median = search_median(*first_stack_top);
-		sort(first_stack_top, first_stack_bottom, second_stack_top, median);
+		median = search_median(*a_top);
+		sort(a_top, a_bottom, b_top, median);
 	}
-	*second_stack_bottom = *second_stack_top;
-	while ((*second_stack_bottom)->prev)
+	*b_bottom = *b_top;
+	while ((*b_bottom)->prev)
 	{
-		*second_stack_bottom = (*second_stack_bottom)->prev;
+		*b_bottom = (*b_bottom)->prev;
 	}
 }
-
-
-
-
-
-
-

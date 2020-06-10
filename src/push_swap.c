@@ -1,68 +1,83 @@
-//
-// Created by Fedya Savchuk on 06/06/2020.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   push_swap.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fedyasavchuk <fedyasavchuk@student.42.fr>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/10 17:10:43 by fedyasavchuk      #+#    #+#             */
+/*   Updated: 2020/06/10 17:10:43 by fedyasavchuk     ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-# include "ft_printf.h"
-# include "push_swap.h"
+#include "ft_printf.h"
+#include "push_swap.h"
 
-void add_number(t_elem *stack_a, int number) {
-    t_elem *prev_elem;
+void	add_number(int number, t_elem **a_stack_top, t_elem **a_stack_bottom)
+{
+	t_elem	*prev_elem;
 
-    if (!stack_a->number) {
-        stack_a->number = number;
-    }
-    else {
-        while (stack_a) {
-            prev_elem = stack_a;
-            stack_a = stack_a->next;
-        }
-        stack_a = ft_memalloc(sizeof(t_elem));
-        stack_a->number = number;
-        prev_elem->next = stack_a;
-        stack_a->prev = prev_elem;
-    }
+	if (!((*a_stack_top)->number))
+	{
+		(*a_stack_top)->number = number;
+		(*a_stack_top)->next = NULL;
+		(*a_stack_top)->prev = NULL;
+		*a_stack_top = *a_stack_bottom;
+	}
+	else
+	{
+		while (*a_stack_top)
+		{
+			prev_elem = *a_stack_top;
+			*a_stack_top = (*a_stack_top)->next;
+		}
+		*a_stack_top = ft_memalloc(sizeof(t_elem));
+		(*a_stack_top)->number = number;
+		prev_elem->next = *a_stack_top;
+		(*a_stack_top)->prev = prev_elem;
+	}
 }
 
-void fill_stack(int argc, char **argv, t_elem *stack_a) {
-    int i = 1;
+void	fill_stack(int argc, char **argv, t_elem **a_top, t_elem **a_bottom)
+{
+	int	i;
 
-    while (i < argc) {
-        if (!ft_is_number(argv[i])) {
-            ft_printf("ERROR");
-            return;
-        }
-
-        add_number(stack_a, ft_atoi(argv[i]));
-        i++;
-    }
+	i = 1;
+	while (i < argc)
+	{
+		if (!ft_is_number(argv[i]))
+		{
+			ft_printf("ERROR");
+			return ;
+		}
+		add_number(ft_atoi(argv[i]), a_top, a_bottom);
+		i++;
+	}
 }
 
-int     main(int argc, char **argv) {
-    counter = 0;
-    t_elem *stack_a;
-    t_elem *stack_b;
-    t_elem *stack_top_a;
-    t_elem *stack_bottom_a;
-    t_elem *stack_top_b;
-    t_elem *stack_bottom_b;
-
-    stack_a = ft_memalloc(sizeof(t_elem));
-    stack_b = NULL;
-
-    fill_stack(argc, argv, stack_a);
-
-    stack_bottom_a = stack_a;
-    stack_top_a = stack_a;
-    stack_bottom_b = stack_b;
-    stack_top_b = stack_b;
-
-    while (stack_top_a->next) {
-        stack_top_a = stack_top_a->next;
-    }
-
-    median_sort(&stack_top_a, &stack_bottom_a, &stack_top_b, &stack_bottom_b);
-    sort_stack(&stack_top_a, &stack_bottom_a, &stack_top_b, &stack_bottom_b);
-
-    return 0;
+void	print_stack(t_elem *stack, char title[])
+{
+	write(1, title, ft_strlen(title));
+	write(1, "\n", 1);
+	while (stack)
+	{
+		ft_putnbr(stack->number);
+		ft_putchar('\n');
+		stack = stack->prev;
+	}
 }
 
+int		main(int argc, char **argv)
+{
+	t_elem *a_stack_top;
+	t_elem *a_stack_bottom;
+	t_elem *b_stack_top;
+	t_elem *b_stack_bottom;
+
+	a_stack_top = (t_elem *)malloc(sizeof(t_elem));
+	a_stack_bottom = a_stack_top;
+	fill_stack(argc, argv, &a_stack_top, &a_stack_bottom);
+	median_sort(&a_stack_top, &a_stack_bottom, &b_stack_top, &b_stack_bottom);
+	sort_stack(&a_stack_top, &a_stack_bottom, &b_stack_top, &b_stack_bottom);
+	return (0);
+}

@@ -1,143 +1,138 @@
-//
-// Created by Fedya Savchuk on 07/06/2020.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sort_stack.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fedyasavchuk <fedyasavchuk@student.42.fr>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/10 17:10:57 by fedyasavchuk      #+#    #+#             */
+/*   Updated: 2020/06/10 17:10:57 by fedyasavchuk     ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "push_swap.h"
 
-int search_position(t_elem *stack_top, int target, int stack) {
-    int size = stack_size(stack_top);
+int		search_position(t_elem *stack_top, int target, int stack)
+{
+	int i;
+	int cost;
+	int size;
 
-    int i = 0;
-    int cost = 0;
-    while (i < size) {
-        if ((stack == 1 && target < stack_top->number) || (stack == 2 && target == stack_top->number)) {
-            break;
-        }
-        stack_top = stack_top->prev;
-        if (i == size / 2 && cost > 0) {
-            if (size % 2 != 0) {
-                cost++;
-            }
-
-
-            cost = cost * -1;
-        }
-        cost++;
-        i++;
-    }
-    return cost;
+	i = 0;
+	cost = 0;
+	size = stack_size(stack_top);
+	while (i < size)
+	{
+		if (stack == 1 && target < stack_top->number)
+			break ;
+		if (stack == 2 && target == stack_top->number)
+			break ;
+		stack_top = stack_top->prev;
+		if (i == size / 2 && cost > 0)
+		{
+			if (size % 2 != 0)
+				cost++;
+			cost = cost * -1;
+		}
+		cost++;
+		i++;
+	}
+	return (cost);
 }
 
-int search_cheaper(t_elem *first_stack_top, t_elem *first_stack_bottom, t_elem *second_stack_top, t_elem *second_stack_bottom) {
-    int size = stack_size(second_stack_top);
-    int i = 0;
-    int min_cost;
-    int target = second_stack_top->number;
+int		get_full_cost(t_elem *a_top, t_elem *b_top, t_elem *save_top)
+{
+	int	full_cost;
+	int	a_position;
+	int	b_position;
 
-    t_elem *save_top;
-    save_top = second_stack_top;
-    while (i < size) {
-        int first_position = search_position(first_stack_top, second_stack_top->number, 1);
-        int second_position = search_position(save_top, second_stack_top->number, 2);
-        int full_cost = ABS(first_position) + ABS(second_position);
-        if (first_position > 0 && second_position > 0) {
-            first_position--;
-            second_position--;
-            full_cost--;
-        }
-        else if (first_position < 0 && second_position < 0) {
-            first_position++;
-            second_position++;
-            full_cost--;
-        }
-
-        if (i == 0) {
-            min_cost = full_cost;
-        }
-        if (full_cost < min_cost) {
-            min_cost = full_cost;
-            target = second_stack_top->number;
-        }
-
-        i++;
-        second_stack_top = second_stack_top->prev;
-    }
-
-    return target;
+	a_position = search_position(a_top, b_top->number, 1);
+	b_position = search_position(save_top, b_top->number, 2);
+	full_cost = ABS(a_position) + ABS(b_position);
+	if (a_position > 0 && b_position > 0 && a_position-- && b_position--)
+		full_cost--;
+	else if (a_position < 0 && b_position < 0 && a_position++ && b_position++)
+		full_cost--;
+	return (full_cost);
 }
 
-void ssort(t_elem **first_stack_top, t_elem **first_stack_bottom, t_elem **second_stack_top, t_elem **second_stack_bottom, int target) {
-    int first_position = search_position(*first_stack_top, target, 1);
-    int second_position = search_position(*second_stack_top, target, 2);
+int		search_cheaper(t_elem *a_top, t_elem *b_top, int i)
+{
+	int		size;
+	int		min_cost;
+	int		full_cost;
+	t_elem	*save_top;
+	int		target;
 
-    while (first_position < 0 && second_position < 0) {
-        counter++;
-        double_rotate(first_stack_top, first_stack_bottom, second_stack_top, second_stack_bottom, 1);
-        first_position++;
-        second_position++;
-    }
-    while (first_position > 0 && second_position > 0) {
-        counter++;
-        double_rotate(first_stack_top, first_stack_bottom, second_stack_top, second_stack_bottom, 0);
-        first_position--;
-        second_position--;
-    }
-
-    while (first_position < 0) {
-        counter++;
-        rotate(first_stack_top, first_stack_bottom, 1);
-        first_position++;
-    }
-    while (second_position < 0) {
-        counter++;
-        rotate(second_stack_top, second_stack_bottom, 1);
-        second_position++;
-    }
-
-    while (first_position > 0) {
-        counter++;
-        rotate(first_stack_top, first_stack_bottom, 0);
-        first_position--;
-    }
-    while (second_position > 0) {
-        counter++;
-        rotate(second_stack_top, second_stack_bottom, 0);
-        second_position--;
-    }
-
-    while ((*first_stack_bottom)->number > target && (*first_stack_bottom)->number < (*first_stack_top)->number) {
-        counter++;
-        rotate(first_stack_top, first_stack_bottom, 1);
-    }
-    push(second_stack_top, first_stack_top);
+	save_top = b_top;
+	target = b_top->number;
+	size = stack_size(b_top);
+	while (i < size)
+	{
+		full_cost = get_full_cost(a_top, b_top, save_top);
+		if (i == 0)
+			min_cost = full_cost;
+		if (full_cost < min_cost)
+		{
+			min_cost = full_cost;
+			target = b_top->number;
+		}
+		i++;
+		b_top = b_top->prev;
+	}
+	return (target);
 }
 
-void sort_stack(t_elem **first_stack_top, t_elem **first_stack_bottom, t_elem **second_stack_top, t_elem **second_stack_bottom) {
-    if (!is_sort(*first_stack_top)) {
-        counter++;
-        rotate(first_stack_top, first_stack_bottom, 0);
-    }
+void	ssort(t_elem **stack_a[], t_elem **stack_b[], int target)
+{
+	int	p1;
+	int	p2;
 
+	p1 = search_position(*stack_a[0], target, 1);
+	p2 = search_position(*stack_b[0], target, 2);
+	while (p1 < 0 && p2 < 0 && p1++ && p2++)
+		double_rotate(stack_a, stack_b, 1);
+	while (p1 > 0 && p2 > 0 && p1-- && p2--)
+		double_rotate(stack_a, stack_b, 0);
+	while (p1 < 0 && p1++)
+		rotate(stack_a[0], stack_a[1], 1);
+	while (p2 < 0 && p2++)
+		rotate(stack_b[0], stack_b[1], 1);
+	while (p1 > 0 && p1--)
+		rotate(stack_a[0], stack_a[1], 0);
+	while (p2 > 0 && p2--)
+		rotate(stack_b[0], stack_b[1], 0);
+	while ((*stack_a[1])->number > target
+			&& (*stack_a[1])->number < (*stack_a[0])->number)
+		rotate(stack_a[0], stack_a[1], 1);
+	push(stack_b[0], stack_a[0]);
+}
 
-    while (*second_stack_top) {
-        int target = search_cheaper(*first_stack_top, *first_stack_bottom, *second_stack_top, *second_stack_bottom);
-        ssort(first_stack_top, first_stack_bottom, second_stack_top, second_stack_bottom, target);
-        print_stack(*first_stack_top, "First Stack");
-        //print_stack(*second_stack_top, "Second Stack");
-    }
+void	sort_stack(t_elem **a_top, t_elem **a_bottom,
+		t_elem **b_top, t_elem **b_bottom)
+{
+	int		target;
+	t_elem	**stack_a[2];
+	t_elem	**stack_b[2];
 
-    while (!is_sort(*first_stack_top)) {
-        counter++;
-        if ((*first_stack_top)->number > (*first_stack_bottom)->number) {
-            rotate(first_stack_top, first_stack_bottom, 0);
-        }
-        else {
-            rotate(first_stack_top, first_stack_bottom, 1);
-        }
-
-    }
-
-    print_stack(*first_stack_top, "First Stack");
-    print_stack(*second_stack_top, "Second Stack");
-    ft_putnbr(counter);
+	stack_a[0] = a_top;
+	stack_a[1] = a_bottom;
+	stack_b[0] = b_top;
+	stack_b[1] = b_bottom;
+	if (!is_sort(*a_top))
+		rotate(stack_a[0], stack_a[1], 0);
+	while (*b_top)
+	{
+		target = search_cheaper(*a_top, *b_top, 0);
+		ssort(stack_a, stack_b, target);
+	}
+	while (!is_sort(*a_top))
+	{
+		if ((*a_top)->number > (*a_bottom)->number)
+			rotate(a_top, a_bottom, 0);
+		else
+			rotate(a_top, a_bottom, 1);
+	}
+	print_stack(*a_top, "First Stack");
+	print_stack(*b_top, "Second Stack");
 }
