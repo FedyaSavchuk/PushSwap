@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_c.c                                          :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aolen <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: aolen <aolen@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/17 14:17:37 by aolen             #+#    #+#             */
-/*   Updated: 2019/10/17 14:17:38 by aolen            ###   ########.fr       */
+/*   Created: 2019/09/04 17:52:47 by aolen             #+#    #+#             */
+/*   Updated: 2019/09/07 15:32:50 by aolen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int		print_c(char c)
+void	ft_putstr_fd(const char *s, int fd)
 {
-	if (g_flags->minus)
-		ft_putchar(c);
-	ft_putchars(' ', g_flags->min_width - 1);
-	if (!g_flags->minus)
-		ft_putchar(c);
-	return (0);
+	int i;
+
+	if (!s)
+		return ;
+	i = 0;
+	while (*(s + i))
+	{
+		ft_putchar_fd(*(s + i), fd);
+		i += 1;
+	}
 }

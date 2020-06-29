@@ -12,6 +12,7 @@
 
 #include "push_swap.h"
 
+
 int		search_position(t_elem *stack_top, int target, int stack)
 {
 	int i;

@@ -81,9 +81,9 @@ void	median_sort(t_elem **a_top, t_elem **a_bottom,
 		median = search_median(*a_top);
 		sort(a_top, a_bottom, b_top, median);
 	}
+
+
 	*b_bottom = *b_top;
 	while ((*b_bottom)->prev)
-	{
 		*b_bottom = (*b_bottom)->prev;
-	}
 }

@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_lstdel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aolen <aolen@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/04 17:52:47 by aolen             #+#    #+#             */
-/*   Updated: 2019/09/07 15:32:50 by aolen            ###   ########.fr       */
+/*   Created: 2019/09/06 14:35:08 by aolen             #+#    #+#             */
+/*   Updated: 2019/09/09 15:25:52 by aolen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include  "libft.h"
 
-void	ft_putstr_fd(const char *s, int fd)
+void	ft_lstdel(t_list **alst, void (*del)(void*, size_t))
 {
-	int i;
-
-	if (!s)
+	if (!alst || !del)
 		return ;
-	i = 0;
-	while (*(s + i))
+	if (!(*alst))
 	{
-		ft_putchar_fd(*(s + i), fd);
-		i += 1;
+		free(alst);
+		alst = NULL;
+		return ;
 	}
-	return ;
+	else if ((*alst)->next)
+		ft_lstdel(&(*alst)->next, del);
+	ft_lstdelone(alst, del);
 }
