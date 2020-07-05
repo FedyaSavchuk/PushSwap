@@ -12,7 +12,6 @@
 
 #include "push_swap.h"
 
-
 int		search_position(t_elem *stack_top, int target, int stack)
 {
 	int i;
@@ -92,21 +91,21 @@ void	ssort(t_elem **stack_a[], t_elem **stack_b[], int target)
 	p1 = search_position(*stack_a[0], target, 1);
 	p2 = search_position(*stack_b[0], target, 2);
 	while (p1 < 0 && p2 < 0 && p1++ && p2++)
-		double_rotate(stack_a, stack_b, 1);
+		double_rotate(*stack_a, *stack_b, 1, "rrr\n");
 	while (p1 > 0 && p2 > 0 && p1-- && p2--)
-		double_rotate(stack_a, stack_b, 0);
+		double_rotate(*stack_a, *stack_b, 0, "rr\n");
 	while (p1 < 0 && p1++)
-		rotate(stack_a[0], stack_a[1], 1);
+		rotate(stack_a[0], stack_a[1], 1, "rra\n");
 	while (p2 < 0 && p2++)
-		rotate(stack_b[0], stack_b[1], 1);
+		rotate(stack_b[0], stack_b[1], 1, "rrb\n");
 	while (p1 > 0 && p1--)
-		rotate(stack_a[0], stack_a[1], 0);
+		rotate(stack_a[0], stack_a[1], 0, "ra\n");
 	while (p2 > 0 && p2--)
-		rotate(stack_b[0], stack_b[1], 0);
+		rotate(stack_b[0], stack_b[1], 0, "rb\n");
 	while ((*stack_a[1])->number > target
 			&& (*stack_a[1])->number < (*stack_a[0])->number)
-		rotate(stack_a[0], stack_a[1], 1);
-	push(stack_b[0], stack_a[0]);
+		rotate(stack_a[0], stack_a[1], 1, "rra\n");
+	push(stack_b[0], stack_a[0], "pa\n");
 }
 
 void	sort_stack(t_elem **a_top, t_elem **a_bottom,
@@ -121,7 +120,7 @@ void	sort_stack(t_elem **a_top, t_elem **a_bottom,
 	stack_b[0] = b_top;
 	stack_b[1] = b_bottom;
 	if (!is_sort(*a_top))
-		rotate(stack_a[0], stack_a[1], 0);
+		rotate(stack_a[0], stack_a[1], 0, "ra\n");
 	while (*b_top)
 	{
 		target = search_cheaper(*a_top, *b_top, 0);
@@ -130,10 +129,8 @@ void	sort_stack(t_elem **a_top, t_elem **a_bottom,
 	while (!is_sort(*a_top))
 	{
 		if ((*a_top)->number > (*a_bottom)->number)
-			rotate(a_top, a_bottom, 0);
+			rotate(a_top, a_bottom, 0, "ra\n");
 		else
-			rotate(a_top, a_bottom, 1);
+			rotate(a_top, a_bottom, 1, "rra\n");
 	}
-	print_stack(*a_top, "First Stack");
-	print_stack(*b_top, "Second Stack");
 }
